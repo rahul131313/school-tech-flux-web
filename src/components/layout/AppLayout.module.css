@@ -1,0 +1,35 @@
+/* AppLayout Styles */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.mainArea {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin-left var(--transition-normal);
+}
+
+/* When sidebar is collapsed, adjust margin */
+:global([data-collapsed]) ~ .mainArea,
+.layout:has(:global([data-collapsed])) .mainArea {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+.content {
+  flex: 1;
+  padding: var(--space-6);
+  max-width: var(--content-max-width);
+  width: 100%;
+}
+
+/* Responsive — stack on small screens */
+@media (max-width: 768px) {
+  .mainArea {
+    margin-left: 0;
+  }
+}

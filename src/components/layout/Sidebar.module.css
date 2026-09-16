@@ -1,0 +1,170 @@
+/* Sidebar Styles */
+
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: var(--color-bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-sticky);
+  transition: width var(--transition-normal);
+  overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar[data-collapsed] {
+  width: var(--sidebar-collapsed-width);
+}
+
+/* ── Brand ────────────────────────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: var(--topbar-height);
+}
+
+.logoWrapper {
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  object-fit: contain;
+}
+
+.logoFallback {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+  background: var(--brand-accent);
+  color: var(--brand-accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.schoolName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-inverse);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.roleBadge {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-400);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* ── Navigation ──────────────────────────────────────────── */
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-2);
+}
+
+.group {
+  margin-bottom: var(--space-4);
+}
+
+.groupTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neutral-500);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  padding: var(--space-1) var(--space-3);
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-lg);
+  color: var(--color-neutral-400);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+}
+
+.link.active {
+  background: var(--brand-accent-light);
+  color: var(--brand-accent);
+}
+
+.sidebar[data-collapsed] .link.active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.linkLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Collapse Button ─────────────────────────────────────── */
+.collapseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  color: var(--color-neutral-400);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.collapseBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-inverse);
+}

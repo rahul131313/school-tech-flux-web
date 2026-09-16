@@ -1,0 +1,101 @@
+/* FormInput Styles */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.required {
+  color: var(--color-error-500);
+  margin-left: var(--space-1);
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-input);
+  color: var(--color-text-primary);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Size variants */
+.wrapper[data-size='sm'] .input {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-sm);
+  height: 36px;
+}
+
+.wrapper[data-size='md'] .input {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-base);
+  height: 44px;
+}
+
+.wrapper[data-size='lg'] .input {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-lg);
+  height: 52px;
+}
+
+/* States */
+.input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--color-border-secondary);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Error state — same visual for server & client validation */
+.wrapper[data-error] .input {
+  border-color: var(--color-border-error);
+}
+
+.wrapper[data-error] .input:focus {
+  border-color: var(--color-border-error);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* Disabled */
+.wrapper[data-disabled] .label {
+  color: var(--color-text-tertiary);
+}
+
+.input:disabled {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+/* Error & helper text */
+.error {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-error);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+
+.helperText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}

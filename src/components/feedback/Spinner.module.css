@@ -1,0 +1,72 @@
+/* Spinner Styles */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-overlay);
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner[data-size='sm'] .svg {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner[data-size='md'] .svg {
+  width: 40px;
+  height: 40px;
+}
+
+.spinner[data-size='lg'] .svg {
+  width: 64px;
+  height: 64px;
+}
+
+.svg {
+  animation: rotate 1s linear infinite;
+}
+
+.track {
+  stroke: var(--color-neutral-200);
+}
+
+.arc {
+  stroke: var(--brand-accent);
+  stroke-dasharray: 80 200;
+  stroke-dashoffset: 0;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 80 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 80 200;
+    stroke-dashoffset: -125;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
