@@ -156,10 +156,12 @@ export interface MessageResponse {
 
 // ─── Branding / Tenant Config ───────────────────────────────
 export interface BrandingConfig {
-  tenantId: string;
-  schoolName: string;
+  tenantId?: string;
+  schoolName?: string;
   tagline?: string;
   logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   accentColor?: string;
   faviconUrl?: string;
 }
@@ -478,5 +480,314 @@ export type RolePermissionItem = RolePermissionResponse;
 
 export type EffectivePermissionsResponse = RolePermissionResponse[];
 
+// ─── Export Format ──────────────────────────────────────────
+export type ExportFormat = 'XLSX' | 'PDF';
 
+// ─── Staff Attendance ───────────────────────────────────────
+export type StaffAttendanceStatus = 'PRESENT' | 'ABSENT' | 'ON_LEAVE' | 'HALF_DAY';
+export type AttendanceMethod = 'MANUAL' | 'BIOMETRIC' | 'QR' | 'SELF_SERVICE';
 
+export interface StaffAttendanceBulkEntryRequest {
+  staffId: string;
+  status: StaffAttendanceStatus;
+  remarks?: string;
+}
+
+export interface StaffAttendanceBulkRequest {
+  date?: string; // YYYY-MM-DD
+  entries: StaffAttendanceBulkEntryRequest[];
+}
+
+export interface StaffAttendanceResponse {
+  id: string;
+  staffId: string;
+  date: string;
+  checkInTime?: string;
+  checkOutTime?: string;
+  status: StaffAttendanceStatus;
+  markedBy?: string;
+  method?: AttendanceMethod | string;
+  remarks?: string;
+}
+
+export interface StudentAttendanceUpdateRequest {
+  status: AttendanceStatus;
+  remarks?: string;
+}
+
+// ─── Holidays ───────────────────────────────────────────────
+export interface HolidayRequest {
+  branchId?: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  description?: string;
+}
+
+export interface HolidayResponse {
+  id: string;
+  branchId?: string;
+  date: string;
+  title: string;
+  description?: string;
+}
+
+// ─── Homework ───────────────────────────────────────────────
+export type HomeworkStatus = 'ASSIGNED' | 'CLOSED';
+export type SubmissionStatus = 'SUBMITTED' | 'GRADED';
+
+export interface HomeworkRequest {
+  sectionId: string;
+  subjectId: string;
+  title: string;
+  instructions: string;
+  attachmentUrl?: string;
+  dueDate: string; // YYYY-MM-DD
+  status?: HomeworkStatus;
+}
+
+export interface HomeworkResponse {
+  id: string;
+  sectionId: string;
+  subjectId: string;
+  teacherId?: string;
+  title: string;
+  instructions: string;
+  attachmentUrl?: string;
+  dueDate: string;
+  status: HomeworkStatus;
+  createdAt?: string;
+}
+
+export interface HomeworkSubmissionRequest {
+  submissionText?: string;
+  attachmentUrl?: string;
+}
+
+export interface HomeworkSubmissionResponse {
+  id: string;
+  homeworkId: string;
+  studentId: string;
+  submissionText?: string;
+  attachmentUrl?: string;
+  submittedAt?: string;
+  status: SubmissionStatus;
+  grade?: string;
+  feedback?: string;
+  gradedBy?: string;
+  gradedAt?: string;
+}
+
+export interface HomeworkGradeRequest {
+  grade: string;
+  feedback?: string;
+}
+
+// ─── Notices & Bulletins ────────────────────────────────────
+export type NoticeTargetType = 'SCHOOL' | 'SECTION' | 'STUDENT';
+export type NoticeStatus = 'DRAFT' | 'SCHEDULED' | 'PUBLISHED';
+
+export interface NoticeRequest {
+  targetType: NoticeTargetType;
+  targetId?: string;
+  title: string;
+  message: string;
+  scheduledAt?: string; // ISO instant
+}
+
+export interface NoticeResponse {
+  id: string;
+  authorUserId?: string;
+  targetType: NoticeTargetType;
+  targetId?: string;
+  title: string;
+  message: string;
+  scheduledAt?: string;
+  publishedAt?: string;
+  status: NoticeStatus;
+}
+
+// ─── Notifications ──────────────────────────────────────────
+export type NotificationChannel = 'IN_APP' | 'EMAIL' | 'WHATSAPP' | 'PUSH';
+export type NotificationStatus = 'PENDING' | 'SENT' | 'FAILED' | 'READ';
+
+export interface NotificationRequest {
+  recipientUserId: string;
+  title: string;
+  body: string;
+  channel: NotificationChannel;
+  referenceType?: string;
+  referenceId?: string;
+}
+
+export interface NotificationResponse {
+  id: string;
+  title: string;
+  body: string;
+  channel: NotificationChannel;
+  status: NotificationStatus;
+  readAt?: string;
+}
+
+// ─── Student Remarks & Behavioral Notes ─────────────────────
+export type RemarkCategory = 'POSITIVE' | 'CORRECTIVE';
+export type RemarkStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface RemarkRequest {
+  studentId: string;
+  category: RemarkCategory;
+  content: string;
+}
+
+export interface RemarkResponse {
+  id: string;
+  studentId: string;
+  authorStaffId?: string;
+  category: RemarkCategory;
+  content: string;
+  status: RemarkStatus;
+}
+
+// ─── Exams & Marks ──────────────────────────────────────────
+export type ExamStatus = 'DRAFT' | 'LOCKED' | 'PUBLISHED';
+
+export interface ExamRequest {
+  academicYearId: string;
+  sectionId: string;
+  name: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;
+}
+
+export interface ExamSubjectRequest {
+  subjectId: string;
+  maxMarks: number;
+  passMarks: number;
+  examDate: string; // YYYY-MM-DD
+}
+
+export interface ExamMarkRequest {
+  studentId: string;
+  marksObtained?: number;
+  absent: boolean;
+}
+
+// ─── Fees & Billing ─────────────────────────────────────────
+export type FeePaymentMode = 'CASH' | 'BANK_TRANSFER' | 'UPI' | 'ONLINE';
+export type FeeInvoiceStatus = 'PENDING' | 'PARTIALLY_PAID' | 'PAID' | 'WAIVED';
+
+export interface FeeHeadRequest {
+  headName: string;
+  amount: number;
+}
+
+export interface FeeStructureRequest {
+  standardId: string;
+  academicYearId: string;
+  name: string;
+  dueDate: string; // YYYY-MM-DD
+  items: FeeHeadRequest[];
+}
+
+export interface FeeInvoiceRequest {
+  studentId: string;
+  feeStructureId: string;
+}
+
+export interface FeeInvoiceResponse {
+  id: string;
+  studentId: string;
+  invoiceNumber: string;
+  dueDate: string;
+  totalAmount: number;
+  waivedAmount: number;
+  paidAmount: number;
+  outstandingAmount: number;
+  status: FeeInvoiceStatus;
+}
+
+export interface FeePaymentRequest {
+  amount: number;
+  mode: FeePaymentMode;
+  providerReference?: string;
+}
+
+export interface FeeWaiverRequest {
+  amount: number;
+  reason: string;
+}
+
+// ─── Payroll Configuration ──────────────────────────────────
+export type PayrollComponentType = 'EARNING' | 'DEDUCTION';
+export type PayrollCalculationType = 'FIXED' | 'PERCENTAGE';
+
+export interface PayrollComponentRequest {
+  name: string;
+  componentType: PayrollComponentType;
+  calculationType: PayrollCalculationType;
+  defaultValue: number;
+}
+
+// ─── School Branding & Modules ──────────────────────────────
+export interface SchoolBrandingRequest {
+  logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  splashAnimationUrl?: string;
+  tagline?: string;
+}
+
+export interface SchoolBrandingResponse {
+  logoUrl?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  splashAnimationUrl?: string;
+  tagline?: string;
+}
+
+export interface SchoolModuleRequest {
+  module: string;
+  enabled: boolean;
+}
+
+export interface SchoolModuleResponse {
+  module: string;
+  enabled: boolean;
+}
+
+// ─── User Role & Account Management ─────────────────────────
+export type AccountStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+export type AuthPolicy = 'OTP_ONLY' | 'PASSWORD_ONLY' | 'EITHER';
+
+export interface StaffProfileRequest {
+  branchId: string;
+  designation: string;
+  joiningDate: string; // YYYY-MM-DD
+  status: AccountStatus;
+}
+
+export interface UserCreateRequest {
+  phoneNumber: string; // +[1-9]\d{7,14}
+  email?: string;
+  roleId: string;
+  status: AccountStatus;
+  authPolicy?: AuthPolicy;
+  staffProfile?: StaffProfileRequest;
+}
+
+export interface UserResponse {
+  id: string;
+  schoolId: string;
+  phoneNumber: string;
+  email?: string;
+  roleId: string;
+  status: AccountStatus;
+  staffProfileCreated: boolean;
+}
+
+export interface UserRoleAssignmentRequest {
+  roleId: string;
+}
+
+export interface UserStatusUpdateRequest {
+  status: AccountStatus;
+}

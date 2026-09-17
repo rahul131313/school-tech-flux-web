@@ -12,6 +12,8 @@ interface ThemeState {
   schoolName: string;
   tagline: string;
   logoUrl: string;
+  primaryColor?: string;
+  secondaryColor?: string;
   accentColor: string;
   faviconUrl: string;
   isLoaded: boolean;
@@ -63,12 +65,14 @@ export const useThemeStore = create<ThemeState>()(
       schoolName: DEFAULT_SCHOOL_NAME,
       tagline: DEFAULT_TAGLINE,
       logoUrl: '',
+      primaryColor: DEFAULT_ACCENT_COLOR,
+      secondaryColor: '#06b6d4',
       accentColor: DEFAULT_ACCENT_COLOR,
       faviconUrl: '',
       isLoaded: false,
 
       setBranding: (config) => {
-        const accent = config.accentColor || DEFAULT_ACCENT_COLOR;
+        const accent = config.primaryColor || config.accentColor || DEFAULT_ACCENT_COLOR;
         applyAccentColor(accent);
 
         // Update favicon if provided
@@ -81,14 +85,16 @@ export const useThemeStore = create<ThemeState>()(
           }
         }
 
-        set({
-          schoolName: config.schoolName || DEFAULT_SCHOOL_NAME,
-          tagline: config.tagline || DEFAULT_TAGLINE,
-          logoUrl: config.logoUrl || '',
+        set((state) => ({
+          schoolName: config.schoolName || state.schoolName || DEFAULT_SCHOOL_NAME,
+          tagline: config.tagline ?? state.tagline,
+          logoUrl: config.logoUrl ?? state.logoUrl,
+          primaryColor: config.primaryColor,
+          secondaryColor: config.secondaryColor,
           accentColor: accent,
-          faviconUrl: config.faviconUrl || '',
+          faviconUrl: config.faviconUrl ?? state.faviconUrl,
           isLoaded: true,
-        });
+        }));
       },
 
       resetToDefaults: () => {

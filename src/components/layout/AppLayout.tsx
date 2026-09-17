@@ -7,6 +7,7 @@
 import { Outlet } from 'react-router';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import { SuperAdminSchoolBanner } from './SuperAdminSchoolBanner';
 import styles from './AppLayout.module.css';
 
 interface AppLayoutProps {
@@ -19,6 +20,7 @@ export function AppLayout({ title }: AppLayoutProps) {
       <Sidebar />
       <div className={styles.mainArea}>
         <TopBar title={title} />
+        <SuperAdminSchoolBanner />
         <main className={styles.content}>
           <Outlet />
         </main>

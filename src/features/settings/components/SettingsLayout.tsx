@@ -14,6 +14,10 @@ import {
   Clock,
   UserCheck,
   ShieldCheck,
+  Palette,
+  Boxes,
+  CalendarDays,
+  Banknote,
   type LucideIcon,
 } from 'lucide-react';
 import styles from './SettingsLayout.module.css';
@@ -33,7 +37,11 @@ const TABS: SettingsTab[] = [
   { label: 'Subjects', path: '/settings/subjects', icon: BookOpen },
   { label: 'Timetable Slots', path: '/settings/timetable-slots', icon: Clock },
   { label: 'Enrollments', path: '/settings/enrollments', icon: UserCheck },
-  { label: 'Permissions', path: '/settings/permissions', icon: ShieldCheck },
+  { label: 'Users, Roles & Security', path: '/settings/permissions', icon: ShieldCheck },
+  { label: 'Branding', path: '/settings/branding', icon: Palette },
+  { label: 'Feature Modules', path: '/settings/modules', icon: Boxes },
+  { label: 'Holidays', path: '/settings/holidays', icon: CalendarDays },
+  { label: 'Payroll Config', path: '/settings/payroll', icon: Banknote },
 ];
 
 export function SettingsLayout() {

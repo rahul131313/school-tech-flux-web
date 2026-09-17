@@ -20,6 +20,10 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  BookMarked,
+  MessageSquareQuote,
+  Receipt,
+  CalendarDays,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
@@ -52,6 +56,15 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Attendance', path: '/attendance', icon: CalendarCheck, permissions: ['ATTENDANCE_VIEW'] },
       { label: 'Timetable', path: '/timetable', icon: Clock, permissions: ['TIMETABLE_VIEW'] },
       { label: 'Exams & Grades', path: '/exams', icon: GraduationCap, permissions: ['EXAM_VIEW'] },
+      { label: 'Homework', path: '/homework', icon: BookMarked, permissions: ['HOMEWORK_VIEW'] },
+      { label: 'Remarks', path: '/remarks', icon: MessageSquareQuote, permissions: ['REMARK_VIEW'] },
+      { label: 'Calendar & Holidays', path: '/holidays', icon: CalendarDays },
+    ],
+  },
+  {
+    title: 'Finance',
+    items: [
+      { label: 'Fees & Invoicing', path: '/fees', icon: Receipt, permissions: ['FEE_VIEW'] },
     ],
   },
   {

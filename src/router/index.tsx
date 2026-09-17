@@ -15,9 +15,12 @@ import { AttendancePage } from '../features/attendance/pages/AttendancePage';
 import { TimetablePage } from '../features/timetable/pages/TimetablePage';
 import { StudentsPage } from '../features/students/pages/StudentsPage';
 import { ExamsPage } from '../features/academics/pages/ExamsPage';
+import { HomeworkPage } from '../features/academics/pages/HomeworkPage';
+import { RemarksPage } from '../features/academics/pages/RemarksPage';
 import { NoticesPage } from '../features/communication/pages/NoticesPage';
+import { FeesPage } from '../features/fees/pages/FeesPage';
 
-// Settings (School Structure)
+// Settings (School Structure & Configuration)
 import { SettingsLayout } from '../features/settings/components/SettingsLayout';
 import { SchoolsPage } from '../features/settings/pages/SchoolsPage';
 import { BranchesPage } from '../features/settings/pages/BranchesPage';
@@ -28,6 +31,10 @@ import { SubjectsPage } from '../features/settings/pages/SubjectsPage';
 import { TimetableSlotsPage } from '../features/settings/pages/TimetableSlotsPage';
 import { StudentEnrollmentsPage } from '../features/settings/pages/StudentEnrollmentsPage';
 import { RolePermissionsPage } from '../features/settings/pages/RolePermissionsPage';
+import { SchoolBrandingPage } from '../features/settings/pages/SchoolBrandingPage';
+import { SchoolModulesPage } from '../features/settings/pages/SchoolModulesPage';
+import { HolidaysPage } from '../features/settings/pages/HolidaysPage';
+import { PayrollConfigPage } from '../features/settings/pages/PayrollConfigPage';
 import { ProfilePage } from '../features/settings/pages/ProfilePage';
 
 // 404 page
@@ -117,6 +124,28 @@ export const router = createBrowserRouter([
             path: '/exams',
             element: <ExamsPage />,
           },
+          {
+            path: '/homework',
+            element: <HomeworkPage />,
+          },
+          {
+            path: '/remarks',
+            element: <RemarksPage />,
+          },
+          {
+            path: '/holidays',
+            element: <HolidaysPage />,
+          },
+          {
+            path: '/calendar',
+            element: <HolidaysPage />,
+          },
+
+          // ── Finance & Billing ────────────────────────────
+          {
+            path: '/fees',
+            element: <FeesPage />,
+          },
 
           // ── Communication Modules ────────────────────────
           {
@@ -124,7 +153,7 @@ export const router = createBrowserRouter([
             element: <NoticesPage />,
           },
 
-          // ── Settings (School Structure & Onboarding) ─────
+          // ── Settings (School Structure & Configuration) ──
           {
             path: '/settings',
             element: <SettingsLayout />,
@@ -142,6 +171,11 @@ export const router = createBrowserRouter([
               { path: 'timetable-slots', element: <TimetableSlotsPage /> },
               { path: 'enrollments', element: <StudentEnrollmentsPage /> },
               { path: 'permissions', element: <RolePermissionsPage /> },
+              { path: 'users', element: <Navigate to="/settings/permissions?tab=users" replace /> },
+              { path: 'branding', element: <SchoolBrandingPage /> },
+              { path: 'modules', element: <SchoolModulesPage /> },
+              { path: 'holidays', element: <HolidaysPage /> },
+              { path: 'payroll', element: <PayrollConfigPage /> },
               { path: 'profile', element: <ProfilePage /> },
             ],
           },

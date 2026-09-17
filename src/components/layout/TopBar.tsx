@@ -13,8 +13,10 @@ import { Bell, LogOut, User, ChevronDown, Lock } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { clearTokens } from '../../api/client';
 import { authApi } from '../../api/endpoints/auth';
+import { notificationsApi } from '../../api/endpoints/notifications';
 import { SetPasswordDialog } from '../dialog/SetPasswordDialog';
 import { SchoolSwitcher } from './SchoolSwitcher';
+import type { NotificationResponse } from '../../api/types';
 import styles from './TopBar.module.css';
 
 interface TopBarProps {
@@ -28,7 +30,27 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
   const [isSetPasswordOpen, setIsSetPasswordOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
+  // In-app notifications
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationResponse[]>([]);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  const fetchNotifications = async () => {
+    try {
+      const list = await notificationsApi.mine();
+      setNotifications(list);
+    } catch {
+      // ignore
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+    }
+  }, [user]);
+
+  // Close popups on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -36,6 +58,9 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
         !dropdownRef.current.contains(e.target as Node)
       ) {
         setDropdownOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -50,6 +75,19 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
     clearTokens();
     navigate('/login', { replace: true });
   };
+
+  const handleMarkRead = async (id: string) => {
+    try {
+      await notificationsApi.markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, status: 'READ' as any } : n))
+      );
+    } catch {
+      // ignore
+    }
+  };
+
+  const unreadCount = notifications.filter((n) => n.status !== 'READ').length;
 
   const displayName = user
     ? user.name || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.phoneNumber || 'User')
@@ -72,15 +110,42 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
         <SchoolSwitcher />
 
         {/* Notification Bell */}
-        <button
-          className={styles.iconBtn}
-          aria-label="Notifications"
-          title="Notifications"
-        >
-          <Bell size={20} />
-          {/* Notification dot — uncomment when wired */}
-          {/* <span className={styles.notifDot} /> */}
-        </button>
+        <div className={styles.notifWrapper} ref={notifRef}>
+          <button
+            className={styles.iconBtn}
+            aria-label="Notifications"
+            title="Notifications"
+            onClick={() => setNotifOpen(!notifOpen)}
+          >
+            <Bell size={20} />
+            {unreadCount > 0 && <span className={styles.notifDot} />}
+          </button>
+
+          {notifOpen && (
+            <div className={styles.notifDropdown}>
+              <div className={styles.notifHeader}>
+                Notifications ({unreadCount} unread)
+              </div>
+              {notifications.length === 0 ? (
+                <div style={{ padding: '16px', textAlign: 'center', fontSize: '12px', color: '#64748b' }}>
+                  No notifications
+                </div>
+              ) : (
+                notifications.map((n) => (
+                  <div
+                    key={n.id}
+                    className={styles.notifItem}
+                    onClick={() => handleMarkRead(n.id)}
+                    style={{ opacity: n.status === 'READ' ? 0.6 : 1 }}
+                  >
+                    <div className={styles.notifTitle}>{n.title}</div>
+                    <div className={styles.notifBody}>{n.body}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
 
         {/* User Menu */}
         <div className={styles.userMenu} ref={dropdownRef}>

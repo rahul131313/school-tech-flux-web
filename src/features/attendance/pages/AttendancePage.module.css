@@ -263,3 +263,171 @@
   background: var(--color-bg-subtle, #f8fafc);
   border-top: 1px solid var(--color-border-primary, #e2e8f0);
 }
+
+/* ── Module Tabs ──────────────────────────────────────────── */
+.tabNav {
+  display: flex;
+  gap: var(--space-2);
+  border-bottom: 2px solid var(--color-border-primary, #e2e8f0);
+  padding-bottom: 2px;
+}
+
+.tabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -4px;
+  transition: all var(--transition-fast);
+}
+
+.tabBtn:hover {
+  color: var(--color-text-primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.tabBtnActive {
+  color: var(--color-primary-600);
+  border-bottom-color: var(--color-primary-600);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* ── Export & Import Buttons ──────────────────────────────── */
+.exportGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Modals ───────────────────────────────────────────────── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.modalContent {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-primary, #e2e8f0);
+}
+
+.modalHeader {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border-primary, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.closeBtn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.closeBtn:hover {
+  background: var(--color-bg-subtle, #f1f5f9);
+  color: var(--color-text-primary);
+}
+
+.modalBody {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.modalFooter {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border-primary, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  background: var(--color-bg-subtle, #f8fafc);
+}
+
+.noticeBanner {
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.dropzone {
+  border: 2px dashed var(--color-border-primary, #cbd5e1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: var(--color-bg-subtle, #f8fafc);
+}
+
+.dropzone:hover {
+  border-color: var(--color-primary-500);
+  background: rgba(99, 102, 241, 0.03);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.badgePresent {
+  background: rgba(16, 185, 129, 0.15);
+  color: #065f46;
+}
+
+.badgeAbsent {
+  background: rgba(239, 68, 68, 0.15);
+  color: #991b1b;
+}
+
+.badgeLeave {
+  background: rgba(245, 158, 11, 0.15);
+  color: #92400e;
+}
+
+.badgeHalfDay {
+  background: rgba(59, 130, 246, 0.15);
+  color: #1e40af;
+}
+
