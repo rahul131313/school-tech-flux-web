@@ -1,20 +1,19 @@
 /* ============================================================
-   SchoolConnect — Auth API Endpoints
-   Typed API functions for authentication.
-   All components access these via TanStack Query hooks — never
-   imported directly into a component.
+   SchoolConnect — Auth API Endpoints (Passwordless OTP Model)
+   Typed API functions for OTP authentication.
    ============================================================ */
 
-import { apiClient } from '../client';
+import { apiClient, getRefreshToken } from '../client';
 import type {
-  ApiResponse,
   BrandingConfig,
-  CurrentUserResponse,
-  ForgotPasswordRequest,
-  LoginRequest,
-  LoginResponse,
-  MessageResponse,
-  ResetPasswordRequest,
+  OtpRequestPayload,
+  OtpVerifyPayload,
+  OtpVerifyResponse,
+  PasswordLoginPayload,
+  SelectChildPayload,
+  SelectSchoolPayload,
+  SetPasswordPayload,
+  TokenResponse,
 } from '../types';
 
 const AUTH_BASE = '/v1/auth';
@@ -22,71 +21,121 @@ const BRANDING_BASE = '/v1/branding';
 
 export const authApi = {
   /**
-   * Authenticate a user with email and password.
-   * POST /api/v1/auth/login
+   * Platform Super Admin: Select a school tenant.
+   * POST /api/v1/auth/select-school
+   * Returns a tenant-scoped TokenResponse.
    */
-  login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await apiClient.post<ApiResponse<LoginResponse>>(
-      `${AUTH_BASE}/login`,
+  selectSchool: async (data: SelectSchoolPayload): Promise<TokenResponse> => {
+    const response = await apiClient.post<TokenResponse>(
+      `${AUTH_BASE}/select-school`,
       data
     );
-    return response.data.data;
+    return response.data;
   },
 
   /**
-   * Request a password reset email.
-   * POST /api/v1/auth/forgot-password
+   * Log in with phone number and password on web.
+   * POST /api/v1/auth/password/login
    */
-  forgotPassword: async (data: ForgotPasswordRequest): Promise<MessageResponse> => {
-    const response = await apiClient.post<ApiResponse<MessageResponse>>(
-      `${AUTH_BASE}/forgot-password`,
+  loginWithPassword: async (data: PasswordLoginPayload): Promise<TokenResponse> => {
+    const response = await apiClient.post<TokenResponse>(
+      `${AUTH_BASE}/password/login`,
       data
     );
-    return response.data.data;
+    return response.data;
   },
 
   /**
-   * Reset password with a token received via email.
-   * POST /api/v1/auth/reset-password
+   * Set or update password for the authenticated user.
+   * POST /api/v1/auth/password/set
    */
-  resetPassword: async (data: ResetPasswordRequest): Promise<MessageResponse> => {
-    const response = await apiClient.post<ApiResponse<MessageResponse>>(
-      `${AUTH_BASE}/reset-password`,
+  setPassword: async (data: SetPasswordPayload): Promise<TokenResponse> => {
+    const response = await apiClient.post<TokenResponse>(
+      `${AUTH_BASE}/password/set`,
       data
     );
-    return response.data.data;
+    return response.data;
   },
-
   /**
-   * Get the currently authenticated user's profile and permissions.
-   * GET /api/v1/auth/me
+   * Request a one-time password (OTP).
+   * POST /api/v1/auth/otp/request
+   * Expected response on success: 204 No Content
    */
-  getCurrentUser: async (): Promise<CurrentUserResponse> => {
-    const response = await apiClient.get<ApiResponse<CurrentUserResponse>>(
-      `${AUTH_BASE}/me`
-    );
-    return response.data.data;
+  requestOtp: async (data: OtpRequestPayload): Promise<void> => {
+    await apiClient.post(`${AUTH_BASE}/otp/request`, data);
   },
 
   /**
-   * Log out the current user (invalidate tokens server-side).
+   * Verify the 6-digit OTP.
+   * POST /api/v1/auth/otp/verify
+   * Returns TokenResponse, or ChildSelectionResponse if multiple children exist.
+   */
+  verifyOtp: async (data: OtpVerifyPayload): Promise<OtpVerifyResponse> => {
+    const response = await apiClient.post<OtpVerifyResponse>(
+      `${AUTH_BASE}/otp/verify`,
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Select a child for parent accounts.
+   * POST /api/v1/auth/select-child
+   */
+  selectChild: async (data: SelectChildPayload): Promise<TokenResponse> => {
+    const response = await apiClient.post<TokenResponse>(
+      `${AUTH_BASE}/select-child`,
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Switch the active child profile.
+   * POST /api/v1/auth/switch-child
+   */
+  switchChild: async (data: SelectChildPayload): Promise<TokenResponse> => {
+    const response = await apiClient.post<TokenResponse>(
+      `${AUTH_BASE}/switch-child`,
+      data
+    );
+    return response.data;
+  },
+
+  /**
+   * Refresh session tokens.
+   * POST /api/v1/auth/refresh
+   */
+  refresh: async (token?: string): Promise<TokenResponse> => {
+    const tokenToSend = token || getRefreshToken();
+    const response = await apiClient.post<TokenResponse>(
+      `${AUTH_BASE}/refresh`,
+      { refreshToken: tokenToSend }
+    );
+    return response.data;
+  },
+
+  /**
+   * Log out current session.
    * POST /api/v1/auth/logout
    */
-  logout: async (): Promise<MessageResponse> => {
-    const response = await apiClient.post<ApiResponse<MessageResponse>>(
-      `${AUTH_BASE}/logout`
-    );
-    return response.data.data;
+  logout: async (refreshToken?: string): Promise<void> => {
+    try {
+      const token = refreshToken || getRefreshToken();
+      await apiClient.post(`${AUTH_BASE}/logout`, { refreshToken: token });
+    } catch {
+      // Ignore errors on logout
+    }
   },
 
   /**
-   * Fetch branding config for a tenant.
+   * Fetch tenant branding configuration.
    * GET /api/v1/branding/:tenantId
    */
   getBranding: async (tenantId: string): Promise<BrandingConfig> => {
-    const response = await apiClient.get<ApiResponse<BrandingConfig>>(
+    const response = await apiClient.get<BrandingConfig>(
       `${BRANDING_BASE}/${tenantId}`
     );
-    return response.data.data;
+    return response.data;
   },
 };

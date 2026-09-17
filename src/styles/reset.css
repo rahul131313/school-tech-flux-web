@@ -11,6 +11,10 @@
   padding: 0;
 }
 
+dialog {
+  margin: auto;
+}
+
 html {
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;

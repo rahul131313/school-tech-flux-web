@@ -1,0 +1,115 @@
+/* ============================================================
+   FormSelect — Styles
+   Mirrors FormInput styling for visual consistency.
+   ============================================================ */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+}
+
+.required {
+  color: var(--color-text-error);
+  margin-left: 2px;
+}
+
+.select {
+  width: 100%;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-input);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  padding-right: 36px;
+}
+
+/* Sizes */
+[data-size='sm'] .select {
+  padding: 6px 36px 6px 10px;
+  font-size: var(--font-size-xs);
+}
+
+[data-size='md'] .select {
+  padding: 8px 36px 8px 12px;
+}
+
+[data-size='lg'] .select {
+  padding: 10px 36px 10px 14px;
+  font-size: var(--font-size-base);
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Error state */
+[data-error] .select {
+  border-color: var(--color-error-500, #ef4444);
+  background-color: var(--color-error-50, #fef2f2);
+}
+
+[data-error] .select:focus {
+  border-color: var(--color-error-600, #dc2626);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+/* Disabled */
+[data-disabled] .select {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-bg-tertiary);
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--font-size-xs);
+  color: var(--color-error-600, #dc2626);
+  font-weight: var(--font-weight-medium);
+  margin-top: 4px;
+  line-height: var(--line-height-normal);
+  animation: errorIn 0.2s ease-out;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+  color: var(--color-error-500, #ef4444);
+}
+
+@keyframes errorIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.helperText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}

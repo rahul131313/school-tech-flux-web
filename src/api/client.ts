@@ -12,7 +12,7 @@ import axios, {
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from 'axios';
-import type { ApiError, ApiResponse, RefreshTokenResponse } from './types';
+import type { ApiError, ApiResponse, TokenResponse } from './types';
 
 // ─── Axios Instance ─────────────────────────────────────────
 export const apiClient = axios.create({
@@ -36,20 +36,65 @@ export function setTokens(access: string | null, refresh: string | null): void {
 }
 
 export function getAccessToken(): string | null {
+  if (!accessToken) {
+    try {
+      const stored = localStorage.getItem('schoolconnect_auth');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.state?.accessToken) {
+          accessToken = parsed.state.accessToken;
+          refreshToken = parsed.state.refreshToken;
+        }
+      }
+    } catch {
+      // Ignore JSON parse errors
+    }
+  }
   return accessToken;
+}
+
+export function getRefreshToken(): string | null {
+  if (!refreshToken) {
+    try {
+      const stored = localStorage.getItem('schoolconnect_auth');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.state?.refreshToken) {
+          accessToken = parsed.state.accessToken;
+          refreshToken = parsed.state.refreshToken;
+        }
+      }
+    } catch {
+      // Ignore JSON parse errors
+    }
+  }
+  return refreshToken;
 }
 
 export function clearTokens(): void {
   accessToken = null;
   refreshToken = null;
+  try {
+    localStorage.removeItem('schoolconnect_auth');
+  } catch {
+    // ignore
+  }
 }
 
 // ─── Request Interceptor ────────────────────────────────────
-// Attach Bearer token to every outgoing request.
+// Attach Bearer token and X-Trace-Id to every outgoing request.
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    if (config.headers) {
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+      if (!config.headers['X-Trace-Id']) {
+        config.headers['X-Trace-Id'] =
+          typeof crypto !== 'undefined' && crypto.randomUUID
+            ? crypto.randomUUID()
+            : `req-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      }
     }
     return config;
   },
@@ -97,17 +142,19 @@ apiClient.interceptors.response.use(
 
       originalRequest._retry = true;
 
-      if (refreshToken) {
+      const currentRefreshToken = refreshToken || getRefreshToken();
+      if (currentRefreshToken) {
         isRefreshing = true;
 
         try {
-          const response = await axios.post<ApiResponse<RefreshTokenResponse>>(
+          const response = await axios.post<TokenResponse | ApiResponse<TokenResponse>>(
             `${apiClient.defaults.baseURL}/v1/auth/refresh`,
-            { refreshToken },
+            { refreshToken: currentRefreshToken },
             { headers: { 'Content-Type': 'application/json' } }
           );
 
-          const newTokens = response.data.data;
+          const payload = response.data;
+          const newTokens: TokenResponse = 'data' in payload ? (payload.data as TokenResponse) : payload;
           setTokens(newTokens.accessToken, newTokens.refreshToken);
 
           processQueue(null, newTokens.accessToken);
@@ -153,6 +200,11 @@ apiClient.interceptors.response.use(
 
 // ─── Redirect Helper ────────────────────────────────────────
 function redirectToLogin(): void {
+  try {
+    localStorage.removeItem('schoolconnect_auth');
+  } catch {
+    // Ignore storage errors
+  }
   // Avoid redirect if already on login page
   if (window.location.pathname !== '/login') {
     window.location.href = '/login';

@@ -8,6 +8,7 @@
    ============================================================ */
 
 import { forwardRef, type InputHTMLAttributes, useId } from 'react';
+import { AlertCircle } from 'lucide-react';
 import styles from './FormInput.module.css';
 
 interface FormInputProps
@@ -65,7 +66,8 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         />
         {hasError && (
           <p id={errorId} className={styles.error} role="alert">
-            {error}
+            <AlertCircle size={13} className={styles.errorIcon} />
+            <span>{error}</span>
           </p>
         )}
         {!hasError && helperText && (

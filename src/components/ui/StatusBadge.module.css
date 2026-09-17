@@ -1,0 +1,68 @@
+/* ============================================================
+   StatusBadge — Styles
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  white-space: nowrap;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* Variant: success */
+[data-variant='success'] {
+  background-color: var(--color-success-50);
+  color: var(--color-success-700);
+}
+[data-variant='success'] .dot {
+  background-color: var(--color-success-500);
+}
+
+/* Variant: warning */
+[data-variant='warning'] {
+  background-color: var(--color-warning-50);
+  color: var(--color-warning-700);
+}
+[data-variant='warning'] .dot {
+  background-color: var(--color-warning-500);
+}
+
+/* Variant: error */
+[data-variant='error'] {
+  background-color: var(--color-error-50);
+  color: var(--color-error-700);
+}
+[data-variant='error'] .dot {
+  background-color: var(--color-error-500);
+}
+
+/* Variant: info */
+[data-variant='info'] {
+  background-color: var(--color-info-50);
+  color: var(--color-info-700);
+}
+[data-variant='info'] .dot {
+  background-color: var(--color-info-500);
+}
+
+/* Variant: neutral */
+[data-variant='neutral'] {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+}
+[data-variant='neutral'] .dot {
+  background-color: var(--color-neutral-400);
+}

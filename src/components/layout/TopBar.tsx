@@ -9,9 +9,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Bell, LogOut, User, ChevronDown } from 'lucide-react';
+import { Bell, LogOut, User, ChevronDown, Lock } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { clearTokens } from '../../api/client';
+import { authApi } from '../../api/endpoints/auth';
+import { SetPasswordDialog } from '../dialog/SetPasswordDialog';
+import { SchoolSwitcher } from './SchoolSwitcher';
 import styles from './TopBar.module.css';
 
 interface TopBarProps {
@@ -19,9 +22,10 @@ interface TopBarProps {
 }
 
 export function TopBar({ title = 'Dashboard' }: TopBarProps) {
-  const { user, clearAuth } = useAuthStore();
+  const { user, clearAuth, refreshToken } = useAuthStore();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isSetPasswordOpen, setIsSetPasswordOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
@@ -38,19 +42,24 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (refreshToken) {
+      await authApi.logout(refreshToken);
+    }
     clearAuth();
     clearTokens();
     navigate('/login', { replace: true });
   };
 
   const displayName = user
-    ? `${user.firstName} ${user.lastName}`
+    ? user.name || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.phoneNumber || 'User')
     : 'User';
 
-  const initials = user
-    ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`
-    : 'U';
+  const initials = user?.name
+    ? user.name.slice(0, 2).toUpperCase()
+    : user?.firstName
+    ? `${user.firstName.charAt(0)}${user.lastName ? user.lastName.charAt(0) : ''}`
+    : 'SC';
 
   return (
     <header className={styles.topbar}>
@@ -59,6 +68,9 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
       </div>
 
       <div className={styles.actions}>
+        {/* Super Admin School Switcher */}
+        <SchoolSwitcher />
+
         {/* Notification Bell */}
         <button
           className={styles.iconBtn}
@@ -113,6 +125,16 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
                 <User size={16} />
                 <span>My Profile</span>
               </button>
+              <button
+                className={styles.dropdownItem}
+                onClick={() => {
+                  setDropdownOpen(false);
+                  setIsSetPasswordOpen(true);
+                }}
+              >
+                <Lock size={16} />
+                <span>Set Password</span>
+              </button>
               <div className={styles.divider} />
               <button
                 className={`${styles.dropdownItem} ${styles.danger}`}
@@ -125,6 +147,11 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
           )}
         </div>
       </div>
+
+      <SetPasswordDialog
+        isOpen={isSetPasswordOpen}
+        onClose={() => setIsSetPasswordOpen(false)}
+      />
     </header>
   );
 }

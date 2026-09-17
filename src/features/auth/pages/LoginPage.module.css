@@ -1,4 +1,4 @@
-/* LoginPage Styles — Premium glassmorphism design */
+/* LoginPage Styles — Premium glassmorphism design for Passwordless OTP Login */
 
 .page {
   min-height: 100vh;
@@ -90,13 +90,13 @@
 /* ── Card — Glassmorphism ────────────────────────────────── */
 .card {
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-2xl);
-  padding: var(--space-10);
+  padding: var(--space-8);
   position: relative;
   z-index: 1;
   animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -120,25 +120,25 @@
 /* ── Brand Header ────────────────────────────────────────── */
 .brandHeader {
   text-align: center;
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
 }
 
 .logoContainer {
   display: flex;
   justify-content: center;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .logo {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: var(--radius-xl);
   object-fit: contain;
 }
 
 .logoFallback {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: var(--radius-xl);
   background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
   display: flex;
@@ -162,100 +162,424 @@
   margin: 0;
 }
 
-/* ── Form ────────────────────────────────────────────────── */
-.form {
+/* ── Auth Mode Tabs (Password vs OTP) ─────────────────────── */
+.authTabs {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-
-/* Override FormInput colors for dark background */
-.form :global(.label),
-.form label {
-  color: var(--color-neutral-300);
-}
-
-.form input {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+  margin-bottom: var(--space-6);
+  gap: 4px;
 }
 
-.form input::placeholder {
-  color: var(--color-neutral-500);
-}
-
-.form input:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.form input:focus {
-  border-color: var(--color-primary-400);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* ── Form Options Row ────────────────────────────────────── */
-.formOptions {
+.authTabBtn {
+  flex: 1;
+  height: 38px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: calc(-1 * var(--space-2));
-}
-
-.rememberMe {
-  display: flex;
-  align-items: center;
+  justify-content: center;
   gap: var(--space-2);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-neutral-300);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.authTabBtn:hover:not(.authTabBtnActive) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.authTabBtnActive {
+  background: var(--color-primary-600) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+.eyeBtn {
+  position: absolute;
+  right: var(--space-3);
+  background: none;
+  border: none;
   color: var(--color-neutral-400);
   cursor: pointer;
-  user-select: none;
-}
-
-.checkbox {
-  width: 16px;
-  height: 16px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
-  cursor: pointer;
-  accent-color: var(--color-primary-500);
-}
-
-.forgotLink {
-  font-size: var(--font-size-sm);
-  color: var(--color-primary-400);
-  text-decoration: none;
+  display: flex;
+  padding: 4px;
   transition: color var(--transition-fast);
 }
 
-.forgotLink:hover {
-  color: var(--color-primary-300);
+.eyeBtn:hover {
+  color: #ffffff;
+}
+
+/* ── Step Titles ─────────────────────────────────────────── */
+.stepHeader {
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+
+.stepTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  margin: 0 0 var(--space-1) 0;
+}
+
+.stepSubtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-300);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.recipientBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-full);
+  color: #c7d2fe;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ── Form Styles ─────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-neutral-200);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-neutral-400);
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3) 0 var(--space-10);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.input::placeholder {
+  color: var(--color-neutral-500);
+}
+
+.input:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.inputError {
+  border-color: #f87171 !important;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2) !important;
+}
+
+.errorText {
+  font-size: var(--font-size-xs);
+  color: #fca5a5;
+  margin-top: 2px;
+}
+
+.hintText {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-400);
+  margin-top: 2px;
+}
+
+/* ── Channel Selector ────────────────────────────────────── */
+.channelGroup {
+  margin-top: var(--space-1);
+}
+
+.channelOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+.channelBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 var(--space-3);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  color: var(--color-neutral-300);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.channelBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.channelBtnActive {
+  background: rgba(99, 102, 241, 0.2) !important;
+  border-color: var(--color-primary-400) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+}
+
+.warningAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-lg);
+  color: #fde68a;
+  font-size: var(--font-size-xs);
+  line-height: 1.4;
+  margin-top: var(--space-2);
+}
+
+/* ── 6-Digit OTP Inputs ──────────────────────────────────── */
+.otpContainer {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+}
+
+.otpBox {
+  width: 50px;
+  height: 56px;
+  text-align: center;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  transition: all var(--transition-fast);
+}
+
+.otpBox:focus {
+  outline: none;
+  border-color: var(--color-primary-400);
+  background: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.otpBoxFilled {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+/* ── Resend & Back Row ───────────────────────────────────── */
+.otpActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+  font-size: var(--font-size-xs);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--color-neutral-400);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+  color: #ffffff;
   text-decoration: underline;
+}
+
+.resendBtn {
+  background: none;
+  border: none;
+  color: var(--color-primary-300);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.resendBtn:hover:not(:disabled) {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.resendBtn:disabled {
+  color: var(--color-neutral-500);
+  cursor: not-allowed;
+}
+
+/* ── Child Selection Styles ──────────────────────────────── */
+.childList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.childCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.childCard:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--color-primary-400);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.childInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.childAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-800));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.childName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 2px 0;
+}
+
+.childMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-neutral-400);
+  margin: 0;
+}
+
+/* ── Primary Submit Button ───────────────────────────────── */
+.submitBtn {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+  border: none;
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  margin-top: var(--space-2);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+  transform: translateY(-1px);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ── Footer ──────────────────────────────────────────────── */
 .footer {
   text-align: center;
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
   font-size: var(--font-size-xs);
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-400);
 }
 
 .footer strong {
-  color: var(--color-neutral-400);
+  color: var(--color-neutral-200);
   font-weight: var(--font-weight-medium);
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 480px) {
   .card {
-    padding: var(--space-6);
-    border-radius: var(--radius-xl);
+    padding: var(--space-5);
   }
 
-  .schoolName {
+  .otpBox {
+    width: 42px;
+    height: 48px;
     font-size: var(--font-size-xl);
   }
 }

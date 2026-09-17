@@ -1,149 +1,112 @@
 /* ============================================================
-   Toast — Shared toast notification system
-   Wraps react-hot-toast with typed API and consistent styling.
+   Toast — Shared Toast Notification System
+   Features:
+   - Positioned at bottom-right so it never overrides tabs/headers
+   - Fully dismissible (click (X) or click card to cancel)
+   - Deduplicated (same message never stacks duplicates)
+   - Non-blocking container (pointer-events pass through)
+   - High-grade SaaS styling with icons and smooth entry
    ============================================================ */
 
 import toast, { Toaster, type ToastPosition } from 'react-hot-toast';
-import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
+import { CheckCircle2, AlertCircle, AlertTriangle, Info, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-// ─── Toast Hook ─────────────────────────────────────────────
-export function useToast() {
-  return {
-    success: (message: string) => {
-      toast.custom(
-        (t) => (
-          <ToastContent
-            variant="success"
-            message={message}
-            onClose={() => toast.dismiss(t.id)}
-            visible={t.visible}
-          />
-        ),
-        { duration: 4000 }
-      );
-    },
-    error: (message: string) => {
-      toast.custom(
-        (t) => (
-          <ToastContent
-            variant="error"
-            message={message}
-            onClose={() => toast.dismiss(t.id)}
-            visible={t.visible}
-          />
-        ),
-        { duration: 6000 }
-      );
-    },
-    warning: (message: string) => {
-      toast.custom(
-        (t) => (
-          <ToastContent
-            variant="warning"
-            message={message}
-            onClose={() => toast.dismiss(t.id)}
-            visible={t.visible}
-          />
-        ),
-        { duration: 5000 }
-      );
-    },
-    info: (message: string) => {
-      toast.custom(
-        (t) => (
-          <ToastContent
-            variant="info"
-            message={message}
-            onClose={() => toast.dismiss(t.id)}
-            visible={t.visible}
-          />
-        ),
-        { duration: 4000 }
-      );
-    },
-    dismiss: toast.dismiss,
-  };
-}
+// ─── Toast Types & Theme ────────────────────────────────────
+type ToastVariant = 'success' | 'error' | 'warning' | 'info';
 
-// ─── Toast Content ──────────────────────────────────────────
 interface ToastContentProps {
-  variant: 'success' | 'error' | 'warning' | 'info';
+  variant: ToastVariant;
   message: string;
   onClose: () => void;
   visible: boolean;
 }
 
-const ICONS: Record<string, ReactNode> = {
-  success: <CheckCircle size={20} />,
-  error: <XCircle size={20} />,
-  warning: <AlertTriangle size={20} />,
-  info: <Info size={20} />,
+const ICONS: Record<ToastVariant, ReactNode> = {
+  success: <CheckCircle2 size={18} />,
+  error: <AlertCircle size={18} />,
+  warning: <AlertTriangle size={18} />,
+  info: <Info size={18} />,
 };
 
-const COLORS: Record<string, { bg: string; border: string; icon: string }> = {
+const THEMES: Record<ToastVariant, { bg: string; border: string; iconColor: string; textColor: string }> = {
   success: {
-    bg: 'var(--color-success-50)',
-    border: 'var(--color-success-500)',
-    icon: 'var(--color-success-600)',
+    bg: '#ffffff',
+    border: 'var(--color-success-500, #22c55e)',
+    iconColor: 'var(--color-success-600, #16a34a)',
+    textColor: 'var(--color-neutral-900, #0f172a)',
   },
   error: {
-    bg: 'var(--color-error-50)',
-    border: 'var(--color-error-500)',
-    icon: 'var(--color-error-600)',
+    bg: '#ffffff',
+    border: 'var(--color-error-500, #ef4444)',
+    iconColor: 'var(--color-error-600, #dc2626)',
+    textColor: 'var(--color-neutral-900, #0f172a)',
   },
   warning: {
-    bg: 'var(--color-warning-50)',
-    border: 'var(--color-warning-500)',
-    icon: 'var(--color-warning-600)',
+    bg: '#ffffff',
+    border: 'var(--color-warning-500, #f59e0b)',
+    iconColor: 'var(--color-warning-600, #d97706)',
+    textColor: 'var(--color-neutral-900, #0f172a)',
   },
   info: {
-    bg: 'var(--color-info-50)',
-    border: 'var(--color-info-500)',
-    icon: 'var(--color-info-600)',
+    bg: '#ffffff',
+    border: 'var(--color-primary-500, #6366f1)',
+    iconColor: 'var(--color-primary-600, #4f46e5)',
+    textColor: 'var(--color-neutral-900, #0f172a)',
   },
 };
 
 function ToastContent({ variant, message, onClose, visible }: ToastContentProps) {
-  const color = COLORS[variant];
+  const theme = THEMES[variant];
 
   return (
     <div
+      onClick={onClose}
+      role="alert"
+      title="Click to dismiss"
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 'var(--space-3)',
-        padding: 'var(--space-3) var(--space-4)',
-        borderRadius: 'var(--radius-lg)',
-        background: color.bg,
-        borderLeft: `4px solid ${color.border}`,
-        boxShadow: 'var(--shadow-lg)',
+        gap: '12px',
+        padding: '12px 16px',
+        borderRadius: '12px',
+        background: theme.bg,
+        border: '1px solid rgba(0, 0, 0, 0.08)',
+        borderLeft: `5px solid ${theme.border}`,
+        boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.15), 0 4px 10px -2px rgba(0, 0, 0, 0.08)',
         maxWidth: '420px',
         width: '100%',
+        cursor: 'pointer',
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'all var(--transition-normal)',
-        fontFamily: 'var(--font-family-sans)',
+        transform: visible ? 'translateY(0) scale(1)' : 'translateY(10px) scale(0.95)',
+        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        fontFamily: 'var(--font-family-sans, sans-serif)',
+        pointerEvents: 'auto',
       }}
-      role="alert"
     >
-      <span style={{ color: color.icon, flexShrink: 0 }}>
+      <span style={{ color: theme.iconColor, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
         {ICONS[variant]}
       </span>
+
       <p
         style={{
           flex: 1,
           margin: 0,
-          fontSize: 'var(--font-size-sm)',
-          fontWeight: 'var(--font-weight-medium)',
-          color: 'var(--color-text-primary)',
-          lineHeight: 'var(--line-height-normal)',
+          fontSize: '13px',
+          fontWeight: 500,
+          color: theme.textColor,
+          lineHeight: 1.45,
+          wordBreak: 'break-word',
         }}
       >
         {message}
       </p>
+
       <button
-        onClick={onClose}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
         style={{
           flexShrink: 0,
           display: 'flex',
@@ -151,15 +114,16 @@ function ToastContent({ variant, message, onClose, visible }: ToastContentProps)
           justifyContent: 'center',
           width: '24px',
           height: '24px',
-          borderRadius: 'var(--radius-md)',
-          color: 'var(--color-text-tertiary)',
+          borderRadius: '6px',
+          color: '#94a3b8',
           cursor: 'pointer',
-          background: 'none',
+          background: 'rgba(0, 0, 0, 0.04)',
           border: 'none',
           padding: 0,
-          transition: 'color var(--transition-fast)',
+          transition: 'all 0.15s ease',
         }}
-        aria-label="Dismiss notification"
+        aria-label="Cancel notification"
+        title="Dismiss notification"
       >
         <X size={14} />
       </button>
@@ -167,16 +131,90 @@ function ToastContent({ variant, message, onClose, visible }: ToastContentProps)
   );
 }
 
-// ─── Toaster Provider ───────────────────────────────────────
-// Drop this once at the app root.
+// ─── Unified Notification API ───────────────────────────────
+export const notify = {
+  success: (message: string) => {
+    toast.custom(
+      (t) => (
+        <ToastContent
+          variant="success"
+          message={message}
+          onClose={() => toast.dismiss(t.id)}
+          visible={t.visible}
+        />
+      ),
+      { id: `success-${message}`, duration: 3500 }
+    );
+  },
+  error: (message: string) => {
+    toast.custom(
+      (t) => (
+        <ToastContent
+          variant="error"
+          message={message}
+          onClose={() => toast.dismiss(t.id)}
+          visible={t.visible}
+        />
+      ),
+      { id: `error-${message}`, duration: 4000 }
+    );
+  },
+  warning: (message: string) => {
+    toast.custom(
+      (t) => (
+        <ToastContent
+          variant="warning"
+          message={message}
+          onClose={() => toast.dismiss(t.id)}
+          visible={t.visible}
+        />
+      ),
+      { id: `warning-${message}`, duration: 3500 }
+    );
+  },
+  info: (message: string) => {
+    toast.custom(
+      (t) => (
+        <ToastContent
+          variant="info"
+          message={message}
+          onClose={() => toast.dismiss(t.id)}
+          visible={t.visible}
+        />
+      ),
+      { id: `info-${message}`, duration: 3500 }
+    );
+  },
+  dismiss: (id?: string) => {
+    if (id) toast.dismiss(id);
+    else toast.dismiss();
+  },
+};
+
+export function useToast() {
+  return notify;
+}
+
+// ─── Toaster Provider Component ─────────────────────────────
 export function ToastProvider() {
-  const position: ToastPosition = 'top-right';
+  const position: ToastPosition = 'bottom-right';
+
   return (
     <Toaster
       position={position}
-      containerStyle={{ top: 'calc(var(--topbar-height) + var(--space-2))' }}
+      containerStyle={{
+        bottom: '24px',
+        right: '24px',
+        pointerEvents: 'none',
+        zIndex: 9999,
+      }}
       toastOptions={{
-        style: { background: 'transparent', boxShadow: 'none', padding: 0 },
+        style: {
+          background: 'transparent',
+          boxShadow: 'none',
+          padding: 0,
+          pointerEvents: 'auto',
+        },
       }}
     />
   );

@@ -2,40 +2,33 @@
    Router Configuration — React Router v7
    ============================================================ */
 
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import { AuthGuard, PublicGuard } from './guards';
 import { AppLayout } from '../components/layout/AppLayout';
 
-// Auth pages (lazy loaded)
+// Auth pages
 import { LoginPage } from '../features/auth/pages/LoginPage';
-import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage';
-import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage';
 
-// Placeholder Dashboard (will be replaced in the Dashboard module build)
-function DashboardPage() {
-  return (
-    <div
-      style={{
-        padding: 'var(--space-6)',
-      }}
-    >
-      <h2
-        style={{
-          fontSize: 'var(--font-size-2xl)',
-          fontWeight: 'var(--font-weight-bold)',
-          color: 'var(--color-text-primary)',
-          marginBottom: 'var(--space-4)',
-        }}
-      >
-        Dashboard
-      </h2>
-      <p style={{ color: 'var(--color-text-secondary)' }}>
-        Welcome to SchoolConnect. Module screens will be built in upcoming
-        sessions.
-      </p>
-    </div>
-  );
-}
+// Core Application Modules
+import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
+import { AttendancePage } from '../features/attendance/pages/AttendancePage';
+import { TimetablePage } from '../features/timetable/pages/TimetablePage';
+import { StudentsPage } from '../features/students/pages/StudentsPage';
+import { ExamsPage } from '../features/academics/pages/ExamsPage';
+import { NoticesPage } from '../features/communication/pages/NoticesPage';
+
+// Settings (School Structure)
+import { SettingsLayout } from '../features/settings/components/SettingsLayout';
+import { SchoolsPage } from '../features/settings/pages/SchoolsPage';
+import { BranchesPage } from '../features/settings/pages/BranchesPage';
+import { AcademicYearsPage } from '../features/settings/pages/AcademicYearsPage';
+import { StandardsPage } from '../features/settings/pages/StandardsPage';
+import { SectionsPage } from '../features/settings/pages/SectionsPage';
+import { SubjectsPage } from '../features/settings/pages/SubjectsPage';
+import { TimetableSlotsPage } from '../features/settings/pages/TimetableSlotsPage';
+import { StudentEnrollmentsPage } from '../features/settings/pages/StudentEnrollmentsPage';
+import { RolePermissionsPage } from '../features/settings/pages/RolePermissionsPage';
+import { ProfilePage } from '../features/settings/pages/ProfilePage';
 
 // 404 page
 function NotFoundPage() {
@@ -91,14 +84,6 @@ export const router = createBrowserRouter([
         path: '/login',
         element: <LoginPage />,
       },
-      {
-        path: '/forgot-password',
-        element: <ForgotPasswordPage />,
-      },
-      {
-        path: '/reset-password/:token',
-        element: <ResetPasswordPage />,
-      },
     ],
   },
 
@@ -109,17 +94,57 @@ export const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
+          // ── Main Dashboard ──────────────────────────────
           {
             path: '/',
             element: <DashboardPage />,
           },
-          // Future module routes will be added here:
-          // { path: '/students', element: <StudentsPage /> },
-          // { path: '/attendance', element: <AttendancePage /> },
-          // { path: '/timetable', element: <TimetablePage /> },
-          // { path: '/exams', element: <ExamsPage /> },
-          // { path: '/notices', element: <NoticesPage /> },
-          // { path: '/settings', element: <SettingsPage /> },
+
+          // ── Academics Modules ────────────────────────────
+          {
+            path: '/students',
+            element: <StudentsPage />,
+          },
+          {
+            path: '/attendance',
+            element: <AttendancePage />,
+          },
+          {
+            path: '/timetable',
+            element: <TimetablePage />,
+          },
+          {
+            path: '/exams',
+            element: <ExamsPage />,
+          },
+
+          // ── Communication Modules ────────────────────────
+          {
+            path: '/notices',
+            element: <NoticesPage />,
+          },
+
+          // ── Settings (School Structure & Onboarding) ─────
+          {
+            path: '/settings',
+            element: <SettingsLayout />,
+            children: [
+              {
+                index: true,
+                element: <Navigate to="/settings/schools" replace />,
+              },
+              { path: 'schools', element: <SchoolsPage /> },
+              { path: 'branches', element: <BranchesPage /> },
+              { path: 'academic-years', element: <AcademicYearsPage /> },
+              { path: 'standards', element: <StandardsPage /> },
+              { path: 'sections', element: <SectionsPage /> },
+              { path: 'subjects', element: <SubjectsPage /> },
+              { path: 'timetable-slots', element: <TimetableSlotsPage /> },
+              { path: 'enrollments', element: <StudentEnrollmentsPage /> },
+              { path: 'permissions', element: <RolePermissionsPage /> },
+              { path: 'profile', element: <ProfilePage /> },
+            ],
+          },
         ],
       },
     ],

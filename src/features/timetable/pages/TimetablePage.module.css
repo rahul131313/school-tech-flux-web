@@ -1,0 +1,152 @@
+/* TimetablePage.module.css — Weekly Calendar Schedule Grid */
+
+.container {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.filterCard {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border-primary, #e2e8f0);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.filterLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.filterSelect {
+  height: 40px;
+  min-width: 220px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-primary, #cbd5e1);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-input, #ffffff);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.gridCard {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border-primary, #e2e8f0);
+  border-radius: var(--radius-xl);
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.gridTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.gridTh {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-subtle, #f8fafc);
+  border-bottom: 2px solid var(--color-border-primary, #e2e8f0);
+  border-right: 1px solid var(--color-border-primary, #e2e8f0);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.dayColumnHeader {
+  width: 120px;
+  text-align: left;
+}
+
+.gridTd {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border-primary, #e2e8f0);
+  border-right: 1px solid var(--color-border-primary, #e2e8f0);
+  vertical-align: top;
+  min-height: 90px;
+  background: #ffffff;
+}
+
+.dayCell {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  background: var(--color-bg-subtle, #f8fafc);
+  vertical-align: middle;
+}
+
+.slotCard {
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-left: 3px solid var(--color-primary-600);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: transform var(--transition-fast);
+}
+
+.slotCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.subjectName {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-700);
+}
+
+.slotTime {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-family: monospace;
+}
+
+.emptySlot {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-neutral-300);
+  font-size: 11px;
+  min-height: 60px;
+}

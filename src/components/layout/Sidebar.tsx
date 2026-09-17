@@ -76,14 +76,20 @@ export function Sidebar() {
 
   // Filter nav items by user permissions
   const filteredGroups = useMemo(() => {
+    const isFullAccess =
+      !user?.role ||
+      user.role === 'SUPER_ADMIN' ||
+      user.role === 'SCHOOL_ADMIN' ||
+      permissions.length === 0;
+
     return NAV_GROUPS.map((group) => ({
       ...group,
       items: group.items.filter((item) => {
-        if (!item.permissions) return true;
+        if (!item.permissions || isFullAccess) return true;
         return item.permissions.some((p) => permissions.includes(p));
       }),
     })).filter((group) => group.items.length > 0);
-  }, [permissions]);
+  }, [permissions, user?.role]);
 
   return (
     <aside

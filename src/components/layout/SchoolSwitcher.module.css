@@ -1,0 +1,58 @@
+/* SchoolSwitcher Styles */
+
+.switcherWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  position: relative;
+  background: var(--color-surface-secondary, #f8fafc);
+  border: 1px solid var(--color-border-primary, #e2e8f0);
+  padding: 4px 10px;
+  border-radius: var(--radius-lg, 8px);
+  font-size: var(--font-size-sm, 14px);
+  transition: border-color var(--transition-fast, 0.15s ease);
+}
+
+.switcherWrapper:focus-within {
+  border-color: var(--brand-accent, #4f46e5);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+}
+
+.icon {
+  color: var(--brand-accent, #4f46e5);
+  flex-shrink: 0;
+}
+
+.select {
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary, #0f172a);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  outline: none;
+  cursor: pointer;
+  padding-right: 4px;
+  max-width: 220px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select option {
+  background: var(--color-bg-primary, #ffffff);
+  color: var(--color-text-primary, #0f172a);
+}
+
+.loadingSpinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(79, 70, 229, 0.2);
+  border-top-color: var(--brand-accent, #4f46e5);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
