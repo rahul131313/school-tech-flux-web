@@ -48,13 +48,13 @@ export const authApi = {
   /**
    * Set or update password for the authenticated user.
    * POST /api/v1/auth/password/set
+   * Result: 204 No Content; requires access token
    */
-  setPassword: async (data: SetPasswordPayload): Promise<TokenResponse> => {
-    const response = await apiClient.post<TokenResponse>(
+  setPassword: async (data: SetPasswordPayload): Promise<void> => {
+    await apiClient.post(
       `${AUTH_BASE}/password/set`,
       data
     );
-    return response.data;
   },
   /**
    * Request a one-time password (OTP).

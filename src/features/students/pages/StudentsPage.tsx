@@ -731,6 +731,22 @@ export function StudentsPage() {
               </div>
             </div>
 
+            {/* UI Placeholder Notice */}
+            <div
+              style={{
+                backgroundColor: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                borderRadius: 8,
+                padding: '10px 14px',
+                marginBottom: 16,
+                fontSize: 12,
+                color: '#475569',
+                lineHeight: 1.5,
+              }}
+            >
+              <strong>UI Placeholder:</strong> Guardian link and unlink operations are retained as a preview interface pending backend endpoint publication in an upcoming release.
+            </div>
+
             {/* Link New Guardian Section */}
             <form
               onSubmit={(e) => {

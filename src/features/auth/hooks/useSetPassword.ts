@@ -6,25 +6,20 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from '../../../api/endpoints/auth';
-import { useAuthStore } from '../../../stores/authStore';
 import { useToast } from '../../../components/ui/Toast';
-import { isApiError, type ApiError, type SetPasswordPayload, type TokenResponse } from '../../../api/types';
+import { isApiError, type ApiError, type SetPasswordPayload } from '../../../api/types';
 
 interface UseSetPasswordOptions {
   onSuccess?: () => void;
 }
 
 export function useSetPassword({ onSuccess }: UseSetPasswordOptions = {}) {
-  const { setSession } = useAuthStore();
   const toast = useToast();
 
   return useMutation({
     mutationFn: (payload: SetPasswordPayload) => authApi.setPassword(payload),
 
-    onSuccess: (data: TokenResponse) => {
-      if (data.accessToken) {
-        setSession(data);
-      }
+    onSuccess: () => {
       toast.success('Password updated successfully!');
       onSuccess?.();
     },
