@@ -142,7 +142,6 @@ export function HolidaysPage() {
 
     // Current month days
     for (let d = 1; d <= daysInMonth; d++) {
-      const curDate = new Date(year, month, d);
       // Construct date string manually to avoid timezone shift
       const mm = String(month + 1).padStart(2, '0');
       const dd = String(d).padStart(2, '0');
