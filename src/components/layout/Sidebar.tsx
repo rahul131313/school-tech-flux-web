@@ -8,7 +8,7 @@
    - Grouped nav sections
    ============================================================ */
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { NavLink, useLocation } from 'react-router';
 import {
   LayoutDashboard,
@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
+import { useUiStore } from '../../stores/uiStore';
 import styles from './Sidebar.module.css';
 
 interface NavItem {
@@ -82,7 +83,12 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const {
+    sidebarCollapsed,
+    setSidebarCollapsed,
+    mobileMenuOpen,
+    setMobileMenuOpen,
+  } = useUiStore();
   const { permissions, user } = useAuthStore();
   const { schoolName, logoUrl } = useThemeStore();
   const location = useLocation();
@@ -107,7 +113,8 @@ export function Sidebar() {
   return (
     <aside
       className={styles.sidebar}
-      data-collapsed={collapsed || undefined}
+      data-collapsed={sidebarCollapsed || undefined}
+      data-mobile-open={mobileMenuOpen || undefined}
       aria-label="Main navigation"
     >
       {/* Brand Header */}
@@ -121,7 +128,7 @@ export function Sidebar() {
             </div>
           )}
         </div>
-        {!collapsed && (
+        {!sidebarCollapsed && (
           <div className={styles.brandText}>
             <span className={styles.schoolName}>{schoolName}</span>
             {user?.role && (
@@ -137,7 +144,7 @@ export function Sidebar() {
       <nav className={styles.nav}>
         {filteredGroups.map((group) => (
           <div key={group.title} className={styles.group}>
-            {!collapsed && (
+            {!sidebarCollapsed && (
               <span className={styles.groupTitle}>{group.title}</span>
             )}
             <ul className={styles.list}>
@@ -152,11 +159,12 @@ export function Sidebar() {
                   <li key={item.path}>
                     <NavLink
                       to={item.path}
+                      onClick={() => setMobileMenuOpen(false)}
                       className={`${styles.link} ${isActive ? styles.active : ''}`}
-                      title={collapsed ? item.label : undefined}
+                      title={sidebarCollapsed ? item.label : undefined}
                     >
                       <Icon size={20} className={styles.icon} />
-                      {!collapsed && (
+                      {!sidebarCollapsed && (
                         <span className={styles.linkLabel}>{item.label}</span>
                       )}
                     </NavLink>
@@ -171,10 +179,10 @@ export function Sidebar() {
       {/* Collapse Toggle */}
       <button
         className={styles.collapseBtn}
-        onClick={() => setCollapsed(!collapsed)}
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+        aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
-        {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+        {sidebarCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
       </button>
     </aside>
   );

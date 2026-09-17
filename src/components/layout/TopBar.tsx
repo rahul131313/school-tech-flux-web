@@ -9,8 +9,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Bell, LogOut, User, ChevronDown, Lock } from 'lucide-react';
+import { Bell, LogOut, User, ChevronDown, Lock, Menu } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
+import { useUiStore } from '../../stores/uiStore';
 import { clearTokens } from '../../api/client';
 import { authApi } from '../../api/endpoints/auth';
 import { notificationsApi } from '../../api/endpoints/notifications';
@@ -25,6 +26,7 @@ interface TopBarProps {
 
 export function TopBar({ title = 'Dashboard' }: TopBarProps) {
   const { user, clearAuth, refreshToken } = useAuthStore();
+  const { toggleMobileMenu } = useUiStore();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSetPasswordOpen, setIsSetPasswordOpen] = useState(false);
@@ -102,6 +104,14 @@ export function TopBar({ title = 'Dashboard' }: TopBarProps) {
   return (
     <header className={styles.topbar}>
       <div className={styles.titleSection}>
+        <button
+          className={styles.menuToggleBtn}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle navigation menu"
+          title="Toggle navigation"
+        >
+          <Menu size={20} />
+        </button>
         <h1 className={styles.title}>{title}</h1>
       </div>
 

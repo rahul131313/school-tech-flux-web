@@ -1,35 +1,71 @@
 /* AppLayout Styles */
 
 .layout {
-  display: flex;
   min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow-x: clip;
 }
 
 .mainArea {
-  flex: 1;
   margin-left: var(--sidebar-width);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  transition: margin-left var(--transition-normal);
+  width: calc(100% - var(--sidebar-width));
+  max-width: calc(100% - var(--sidebar-width));
+  min-width: 0;
+  box-sizing: border-box;
+  transition: margin-left var(--transition-normal), width var(--transition-normal), max-width var(--transition-normal);
 }
 
-/* When sidebar is collapsed, adjust margin */
+/* When sidebar is collapsed, adjust margin and widths */
 :global([data-collapsed]) ~ .mainArea,
 .layout:has(:global([data-collapsed])) .mainArea {
   margin-left: var(--sidebar-collapsed-width);
+  width: calc(100% - var(--sidebar-collapsed-width));
+  max-width: calc(100% - var(--sidebar-collapsed-width));
 }
 
 .content {
   flex: 1;
   padding: var(--space-6);
-  max-width: var(--content-max-width);
+  max-width: 100%;
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Mobile backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: calc(var(--z-sticky) + 10);
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Responsive — stack on small screens */
 @media (max-width: 768px) {
   .mainArea {
-    margin-left: 0;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .content {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: var(--space-3);
   }
 }

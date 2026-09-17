@@ -9,14 +9,26 @@
   background: var(--color-bg-sidebar);
   display: flex;
   flex-direction: column;
-  z-index: var(--z-sticky);
-  transition: width var(--transition-normal);
+  z-index: calc(var(--z-sticky) + 20);
+  transition: width var(--transition-normal), transform var(--transition-normal);
   overflow: hidden;
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .sidebar[data-collapsed] {
   width: var(--sidebar-collapsed-width);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-2xl);
+    width: var(--sidebar-width) !important;
+  }
+
+  .sidebar[data-mobile-open] {
+    transform: translateX(0);
+  }
 }
 
 /* ── Brand ────────────────────────────────────────────────── */
