@@ -9,10 +9,14 @@ import type { SchoolRequest, SpringPageable } from '../../../api/types';
 
 const QUERY_KEY = 'schools';
 
-export function useSchools(params?: SpringPageable) {
+export function useSchools(
+  params?: SpringPageable,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: [QUERY_KEY, params],
     queryFn: () => schoolsApi.list(params),
+    ...options,
   });
 }
 

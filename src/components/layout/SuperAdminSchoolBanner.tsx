@@ -18,16 +18,23 @@ export function SuperAdminSchoolBanner() {
   const queryClient = useQueryClient();
   const toast = useToast();
 
+  const isSuperAdminWithoutSchool =
+    user?.role === 'SUPER_ADMIN' && !user?.schoolId;
+
   const [chosenSchoolId, setChosenSchoolId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Only show if user is SUPER_ADMIN and does NOT have an active schoolId
-  if (user?.role !== 'SUPER_ADMIN' || user?.schoolId) {
+  // Unconditionally call hooks to strictly adhere to React's Rules of Hooks
+  const { data: schoolsData, isLoading } = useSchools(
+    { size: 100 },
+    { enabled: !!isSuperAdminWithoutSchool }
+  );
+  const schools = schoolsData?.content || [];
+
+  // Only render banner if user is SUPER_ADMIN and does NOT have an active schoolId
+  if (!isSuperAdminWithoutSchool) {
     return null;
   }
-
-  const { data: schoolsData, isLoading } = useSchools({ size: 100 });
-  const schools = schoolsData?.content || [];
 
   const handleSelectSchool = async () => {
     if (!chosenSchoolId) return;

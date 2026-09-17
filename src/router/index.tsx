@@ -5,6 +5,7 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { AuthGuard, PublicGuard } from './guards';
 import { AppLayout } from '../components/layout/AppLayout';
+import { RouteErrorBoundary } from '../components/feedback/RouteErrorBoundary';
 
 // Auth pages
 import { LoginPage } from '../features/auth/pages/LoginPage';
@@ -100,6 +101,7 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <AppLayout />,
+        ErrorBoundary: RouteErrorBoundary,
         children: [
           // ── Main Dashboard ──────────────────────────────
           {

@@ -18,14 +18,19 @@ export function SchoolSwitcher() {
   const queryClient = useQueryClient();
   const toast = useToast();
   const [isSwitching, setIsSwitching] = useState(false);
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+
+  // Unconditionally call hooks to strictly adhere to React's Rules of Hooks
+  const { data: schoolsData, isLoading } = useSchools(
+    { size: 100 },
+    { enabled: !!isSuperAdmin }
+  );
+  const schools = schoolsData?.content || [];
 
   // Only super admins can switch schools
-  if (user?.role !== 'SUPER_ADMIN') {
+  if (!isSuperAdmin) {
     return null;
   }
-
-  const { data: schoolsData, isLoading } = useSchools({ size: 100 });
-  const schools = schoolsData?.content || [];
 
   const handleSchoolChange = async (newSchoolId: string) => {
     if (!newSchoolId || newSchoolId === user?.schoolId) return;
